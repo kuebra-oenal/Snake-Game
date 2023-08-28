@@ -6,10 +6,11 @@
 body{
     font-family: hed;
     color: black;
+    background-color:rgba(187, 212, 192, 0.801);
     text-align: center;
     overflow: hidden;
 }
-
+    
 img{
     width: 50px;
     height: 50px;
@@ -79,7 +80,6 @@ button{
     margin: 2%;
     font-size: larger;
 }
-
 
 canvas{
     border: 3px solid;
