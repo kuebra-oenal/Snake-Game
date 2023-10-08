@@ -3,14 +3,16 @@
     src: url("../font/Righteous-Regular.ttf");
 }
 
-body{
+body{   
     font-family: hed;
+    text-align: center;
     color: black;
     background-color:rgba(187, 212, 192, 0.801);
-    text-align: center;
+    /* background-color:rgba(196, 181, 233, 0.712); */
+    /* background-color:rgba(87, 50, 182, 0.712); */
     overflow: hidden;
 }
-    
+
 img{
     width: 50px;
     height: 50px;
@@ -19,7 +21,7 @@ img{
 .GG{
     font-size: 20px;
     font-weight: bold;
-    color:black;
+    color: black;
     width: 50px;
     height: 50px;
     background-color: transparent;
@@ -36,14 +38,15 @@ button{
     border-color: transparent;
 }
 
-.arrows > * {
+.arrows > *{
     width: 100%;
 }
 
-.mid {
+.mid{
     display: flex;
     flex-direction: row;
 }
+
 .up{
     transform: rotate(270deg);
 }
@@ -60,7 +63,7 @@ button{
     transform: rotate(90deg);
 }
 
-.arrows {
+.arrows{
     margin-left: 1rem;
     display: flex;
     flex-direction: column;
@@ -68,17 +71,22 @@ button{
     justify-self: center;
     padding: 1rem;
 }
-#container {
+
+#container{
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
 }
-#container-highscore {
+
+#container-highscore{
     display: flex;
     justify-content: center;
     margin: 2%;
     font-size: larger;
+}
+#high-score{
+    margin-left: 5px;
 }
 
 canvas{
@@ -88,33 +96,15 @@ canvas{
     box-shadow: 1px 5px 10px rgba(0, 0, 0, 0.2);
 }
 
-.active {
+.active{
     background-color: aqua;
 }
 
-#retryButton {
+#retryButton{
     position: absolute;
     transform: translate(calc(250px - 50%), -250px);
-
 }
-/*
-@media (max-width: 767px)
-{
-    button{
-        display: block;
-        background-color: transparent;
-        border-color: transparent;
-    }
-
-    canvas{
-        width: 300px;
-        height: 300px;
-    }
-
-    img{
-        width: 50px;
-        height: 50px;
-    }
 
 
-}*/
+/* 1st try : 26m */
+
