@@ -21,6 +21,7 @@ let food_y;
 let movementInterval = 100;
 var score = 0;
 
+
 // let food_a;
 // let food_b;
 
@@ -106,10 +107,10 @@ function randomFood2(min2, max2){
     return Math.round((Math.random() * (max2 - min2) + min2) / 20) * 20;
 }
 
-function genFood2(){
-    food_a = randomFood2(0, board.width - 30);
-    food_b = randomFood2(0, board.height - 30);
-}
+// function genFood2(){
+//     food_a = randomFood2(0, board.width - 30);
+//     food_b = randomFood2(0, board.height - 30);
+// }
 
 
 // move ----------------------------------------
@@ -128,18 +129,74 @@ function moveSnake() {
          score += 10;
     }
     else {
-         snake.pop();
+         snake.pop(70);
         // Removes tail of the snake
         // Makes the snake move forward by one step while maintaining its overall length
     }
 
 }
 
+
+function changeDirection(event) {
+    const leftKey = 37;
+    const rightKey = 39;
+    const upKey = 38;
+    const downKey = 40;
+
+
+    // if (changing_direction) return;
+
+    changing_direction = true;
+    const keyPressed = event.keyCode;
+    // const up = dy === -20;
+    // const down = dy === 20;
+    // const right = dx === 20;
+    // const left = dx === -20;
+
+    // if (keyPressed === leftKey && !right) {
+    //      moveL()
+    // }
+    // if (keyPressed === upKey && !down) {
+    //      moveU()
+    // }
+    // if (keyPressed === rightKey && !left) {
+    //      moveR()
+    // }
+    // if (keyPressed === downKey && !up) {
+    //      moveD()
+    // }
+
+    // Handle direction changes
+    if (event.keyCode === leftKey && dx !== 20) {
+        moveL();
+    }
+    if (event.keyCode === upKey && dy !== 20) {
+        moveU();
+    }
+    if (event.keyCode === rightKey && dx !== -20) {
+        moveR();
+    }
+    if (event.keyCode === downKey && dy !== -20) {
+        moveD();
+    }
+    
+}
+
 function gameOver() {
     let over = false;
-    // Check if snake's head hits the wall boundaries
-    if (snake[0].x <= 0 || snake[0].y <= 0 || snake[0].x > board.width - 40 || snake[0].y > board.height - 40) {
-        over = true;
+    
+    if (
+        snake[0].x < 0 ||
+        snake[0].y < 0 ||
+        snake[0].x >= board.width ||
+        snake[0].y >= board.height
+    ) {
+        // Check if the snake is hitting the walls
+        over = true; // Game over
+    } else {
+        // Wrap the snake around the board
+        snake[0].x = (snake[0].x + board.width) % board.width;
+        snake[0].y = (snake[0].y + board.height) % board.height;
     }
 
     // Check for collision with snake's own body
@@ -159,47 +216,9 @@ function gameOver() {
          retryButton.style.display = 'block';
     }
 
-    // if (over) {
-    //     setTimeout(() => {
-    //         snakeboard_ctx.fillStyle = "black";
-    //         snakeboard_ctx.font = "70px hed";
-    //         snakeboard_ctx.fillText("Game Over", 75, 250);
-    //         setHighScore(score); // Update the high score to new high score if achieved.
-    //         retryButton.style.display = 'block';
-    //     }, 500); // Delay the game over screen by 500 milliseconds (adjust the delay as needed)
-    // }
-
     return over;
 }
 
-function changeDirection(event) {
-    const leftKey = 37;
-    const rightKey = 39;
-    const upKey = 38;
-    const downKey = 40;
-
-    if (changing_direction) return;
-
-    changing_direction = true;
-    const keyPressed = event.keyCode;
-    const up = dy === -20;
-    const down = dy === 20;
-    const right = dx === 20;
-    const left = dx === -20;
-
-    if (keyPressed === leftKey && !right) {
-         moveL()
-    }
-    if (keyPressed === upKey && !down) {
-         moveU()
-    }
-    if (keyPressed === rightKey && !left) {
-         moveR()
-    }
-    if (keyPressed === downKey && !up) {
-         moveD()
-    }
-}
 
 
 function moveU() {
@@ -235,25 +254,37 @@ function drawFood(){
     snakeboard_ctx.fillRect(food_x, food_y, 20, 20);
 }
 
-function drawFood2(){
+// function drawFood2(){
     
-    snakeboard_ctx.fillStyle = 'beige';
+//     snakeboard_ctx.fillStyle = 'beige';
 
-    snakeboard_ctx.fillRect(food_a, food_b, 20, 20);
-}
+//     snakeboard_ctx.fillRect(food_a, food_b, 20, 20);
+// }
 
-function drawSnakePart(snakePart){
+// function drawSnakePart(snakePart){
+
+//     snakeboard_ctx.fillStyle = snake_col;
+
+//     snakeboard_ctx.fillRect(snakePart.x, snakePart.y, 20, 20);
+
+// }
+
+// function drawSnake(){
+//     snake.forEach(drawSnakePart);
+// }
+
+function drawSnakePart(snakePart) {
+    // Clip the snake's body segments to stay within the board boundaries
+    const clippedX = Math.max(0, Math.min(board.width - 20, snakePart.x));
+    const clippedY = Math.max(0, Math.min(board.height - 20, snakePart.y));
 
     snakeboard_ctx.fillStyle = snake_col;
-
-    snakeboard_ctx.fillRect(snakePart.x, snakePart.y, 20, 20);
-
+    snakeboard_ctx.fillRect(clippedX, clippedY, 20, 20);
 }
 
-function drawSnake(){
+function drawSnake() {
     snake.forEach(drawSnakePart);
 }
-
 function drawScore() {
     snakeboard_ctx.fillStyle = "black";
     snakeboard_ctx.font = "20px hed";
@@ -278,19 +309,22 @@ function setHighScore() {
 function updateScore() {
 
     // Adjust movement interval based on the score
+    if (score == 0) {
+        movementInterval = 150; // Snake moves faster when score reaches 10
+    }
     if (score >= 10) {
-        movementInterval = 90; // Snake moves faster when score reaches 10
+        movementInterval = 140; // Snake moves faster when score reaches 10
     }
     if (score >= 20) {
-        movementInterval = 80; // Snake moves even faster when score reaches 20
+        movementInterval = 130; // Snake moves even faster when score reaches 20
     }
     if (score >= 30) {
-        movementInterval = 70;
+        movementInterval = 120;
     }
     if (score >= 40) {
-        movementInterval = 60;
+        movementInterval = 110;
     }
     if (score >= 50) {
-        movementInterval = 50;
+        movementInterval = 100;
     }
 }
