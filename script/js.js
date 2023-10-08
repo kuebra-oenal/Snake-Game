@@ -1,13 +1,13 @@
+// Snake Game Master 4 : trying to understand the code step by step
+// explanationary comments by ChatGPT
+
 const board_border = 'black';
-// const board_background = "#ECDBBA";
-// const snake_col = '#346751';
+// const board_background = 'rgba(196, 181, 233, 0.712)';
 const board_background = 'beige';
 const snake_col = 'rgba(87, 50, 182, 0.712)';
 
-// const snake_border = 'darkblue';
-
 let snake = [
-    { x: 200, y: 200},
+    { x:200, y: 200},
 ];
 
 let changing_direction = false;
@@ -21,15 +21,17 @@ let food_y;
 let movementInterval = 100;
 var score = 0;
 
+// let food_a;
+// let food_b;
+
 const buttons = {};
 const board = document.getElementById("id");
-const snakeboard_ctx = board.getContext("2d"); // ChatGPT: 2d specifies that you want a 2D rendering context
+const snakeboard_ctx = board.getContext("2d");
 const retryButton = document.getElementById('retryButton');
 
 load();
 
 document.addEventListener("keydown", changeDirection);
-window.addEventListener('beforeunload', setHighScore); // set highscore if tab is closed/game ends
 
 for (const element of document.querySelectorAll('button')) {
     buttons[element.classList[0]] = element
@@ -49,8 +51,8 @@ function load() {
     food_x;
     food_y;
 
-    movementInterval = 100;
     score = 0;
+    movementInterval = 100;
     main();
     genFood();
     setHighScore();
@@ -69,18 +71,23 @@ function main(){
     drawScore();
     updateScore();
 
-    setTimeout(main, movementInterval);   
+    setTimeout(main, movementInterval);
 }
+
 function clearCanvas(){
-    
+
     snakeboard_ctx.fillStyle = board_background;
 
-    snakeboard_ctx.strokestyle = board_border;
+    snakeboard_ctx.strokeStyle = board_border;
 
     snakeboard_ctx.fillRect(0, 0, board.width, board.height);
 
     snakeboard_ctx.strokeRect(0, 0, board.width, board.height);
+
+
 }
+
+// food ----------------------------------------
 
 function randomFood(min, max){
     return Math.round((Math.random() * (max - min) + min) / 20) * 20;
@@ -89,19 +96,30 @@ function randomFood(min, max){
 function genFood(){
     food_x = randomFood(0, board.width - 50);
     food_y = randomFood(0, board.height - 50);
-    snake.forEach((part) => {
-        const has_eaten = part.x == food_x && part.y == food_y;
-        if(has_eaten) genFood();
-    });
+    // snake.forEach((part) => {
+    //     const has_eaten = part.x == food_x && part.y == food_y;
+    //     if(has_eaten) genFood();
+    // });
 }
 
-// ---------------------------------------------------
+function randomFood2(min2, max2){
+    return Math.round((Math.random() * (max2 - min2) + min2) / 20) * 20;
+}
 
+function genFood2(){
+    food_a = randomFood2(0, board.width - 30);
+    food_b = randomFood2(0, board.height - 30);
+}
+
+
+// move ----------------------------------------
 
 function moveSnake() {
     const head = { x: snake[0].x + dx, y: snake[0].y + dy };
 
     snake.unshift(head);
+    // Used to add the new head to the beginning of the snake array
+    // Moves the snake one step in the specified direction
 
     const has_eaten_food = snake[0].x === food_x && snake[0].y === food_y;
 
@@ -111,16 +129,20 @@ function moveSnake() {
     }
     else {
          snake.pop();
+        // Removes tail of the snake
+        // Makes the snake move forward by one step while maintaining its overall length
     }
 
 }
 
 function gameOver() {
     let over = false;
+    // Check if snake's head hits the wall boundaries
     if (snake[0].x <= 0 || snake[0].y <= 0 || snake[0].x > board.width - 40 || snake[0].y > board.height - 40) {
-         over = true;
+        over = true;
     }
 
+    // Check for collision with snake's own body
     for (var i = 1; i < snake.length - 1; i++) {
          var tmp = snake[i];
          if (tmp.x === snake[0].x && tmp.y === snake[0].y) {
@@ -128,6 +150,7 @@ function gameOver() {
               break;
          }
     }
+    // If game is over, update UI and return true
     if (over) {
          snakeboard_ctx.fillStyle = "black";
          snakeboard_ctx.font = "70px hed";
@@ -135,6 +158,17 @@ function gameOver() {
          setHighScore(score); // Update the high score to new high score if achieved.
          retryButton.style.display = 'block';
     }
+
+    // if (over) {
+    //     setTimeout(() => {
+    //         snakeboard_ctx.fillStyle = "black";
+    //         snakeboard_ctx.font = "70px hed";
+    //         snakeboard_ctx.fillText("Game Over", 75, 250);
+    //         setHighScore(score); // Update the high score to new high score if achieved.
+    //         retryButton.style.display = 'block';
+    //     }, 500); // Delay the game over screen by 500 milliseconds (adjust the delay as needed)
+    // }
+
     return over;
 }
 
@@ -192,29 +226,31 @@ function moveL() {
     dy = 0;
 }
 
-//design
+// design ----------------------------------------
 
-function drawFood() {
+function drawFood(){
 
     snakeboard_ctx.fillStyle = 'black';
-    // snakeboard_ctx.strokestyle = '#C84B31';
+
     snakeboard_ctx.fillRect(food_x, food_y, 20, 20);
-    // snakeboard_ctx.strokeRect(food_x, food_y, 20, 20);
 }
 
-function drawSnakePart(snakePart) {
-    // snakeboard_ctx .roundRect(snakePart.x, snakePart.y, 200, 200, 20);
+function drawFood2(){
+    
+    snakeboard_ctx.fillStyle = 'beige';
+
+    snakeboard_ctx.fillRect(food_a, food_b, 20, 20);
+}
+
+function drawSnakePart(snakePart){
 
     snakeboard_ctx.fillStyle = snake_col;
 
-    //snakeboard_ctx.strokestyle = snake_border;
-
     snakeboard_ctx.fillRect(snakePart.x, snakePart.y, 20, 20);
 
-    //snakeboard_ctx.strokeRect(snakePart.x, snakePart.y, 20, 20);
 }
 
-function drawSnake() {
+function drawSnake(){
     snake.forEach(drawSnakePart);
 }
 
@@ -238,7 +274,6 @@ function setHighScore() {
     highscore.textContent = fetchedScore;
     localStorage.setItem("highScore", fetchedScore);
 }
-
 
 function updateScore() {
 
